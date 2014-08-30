@@ -1,3 +1,4 @@
+// The misty command lets you control the volume of output on a Raspberry Pi with a MIDI controller.
 package main
 
 // #cgo LDFLAGS: -lasound -lstdc++
