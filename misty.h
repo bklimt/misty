@@ -1,3 +1,0 @@
-
-int setVolume(int percentage);
-

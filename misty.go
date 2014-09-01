@@ -1,34 +1,35 @@
 // The misty command lets you control the volume of output on a Raspberry Pi with a MIDI controller.
 package main
 
-// #cgo LDFLAGS: -lasound -lstdc++
-// #include "misty.h"
-import "C"
-
 import (
 	"flag"
 	"fmt"
 	"github.com/bklimt/midi"
+	"github.com/bklimt/volume"
 )
+
+var card string
 
 func midiOn(note int) {
 	if note == 72 {
-		C.setVolume(0)
+		volume.SetVolume(card, 0)
 	}
 
 	// 48 -> 100, 72 -> 60
 	vol := int(60.0 + 40.0*(1.0-((float64(note)-48.0)/(72.0-48.0))))
 	fmt.Printf("Setting volume to %d%%\n", vol)
-	C.setVolume(C.int(vol))
+	volume.SetVolume(card, vol)
 }
 
 func midiControl(param, value int) {
 	if param == 7 {
-		C.setVolume(C.int((value * 100) / 127))
+		volume.SetVolume(card, (value*100)/127)
 	}
 }
 
 func main() {
+	flag.StringVar(&card, "card", "default", "The card to set the volume for.")
+
 	flag.Parse()
 
 	c := make(chan interface{})
